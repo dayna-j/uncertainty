@@ -5,16 +5,36 @@ import Options from './Options';
 import AddOption from './AddOption';
 
 export default class UncertaintyApp extends React.Component {
-    constructor (props) {
-      super(props);
-      this.handleDeleteOptions = this.handleDeleteOptions.bind(this);
-      this.handlePick = this.handlePick.bind(this);
-      this.handleAddOption = this.handleAddOption.bind(this);
-      this.handleDeleteOption = this.handleDeleteOption.bind(this);
-      this.state = { 
-        options: props.options
-      };
+    state = {
+      options: []
     }
+    handleAddOption = (option) => {
+      if(!option) {
+        return 'Enter valid value to add item to list'
+      } else if (this.state.options.indexOf(option) > -1) {
+        return 'Duplicate options not allowed'
+      }
+      this.setState((prevState) => ({ options: prevState.options.concat(option) }))
+    };
+  
+    handleDeleteOptions = () => {
+      this.setState( () => ({ options: [] }) );
+    };
+  
+    handleDeleteOption = (optionToRemove) => {
+      this.setState((prevState) => ({
+        options: prevState.options.filter((option) => {
+          return optionToRemove !== option;
+        })
+      }))
+    };
+  
+    handlePick = () => {
+      const randomNumber = Math.floor(Math.random() * this.state.options.length);
+      const option = this.state.options[randomNumber];
+      alert(option);
+    };
+
     componentDidMount() {
       try {
         const json = localStorage.getItem('options');
@@ -37,39 +57,7 @@ export default class UncertaintyApp extends React.Component {
     componentWillUnmount() {
       console.log('componentWillUnmount!')
     }
-    handleAddOption(option) {
-      if(!option) {
-        return 'Enter valid value to add item to list'
-      } else if (this.state.options.indexOf(option) > -1) {
-        return 'Duplicate options not allowed'
-      }
-  
-      this.setState((prevState) => ({ options: prevState.options.concat(option) }))
-  
-      // this.setState( (prevState) => {
-      //   return {
-      //     options: prevState.options.concat(option)
-      //   };
-      // });
-    }
-  
-    handleDeleteOptions() {
-      this.setState( () => ({ options: [] }) );
-    }
-  
-    handleDeleteOption(optionToRemove) {
-      this.setState((prevState) => ({
-        options: prevState.options.filter((option) => {
-          return optionToRemove !== option;
-        })
-      }))
-    }
-  
-    handlePick() {
-      const randomNumber = Math.floor(Math.random() * this.state.options.length);
-      const option = this.state.options[randomNumber];
-      alert(option);
-    }
+    
     render() {
       const title = 'Uncertainty';
       const subtitle = 'Put your life in the hands of a computer';
