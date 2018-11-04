@@ -1,14 +1,16 @@
 import React from 'react';
 
 export default class AddOption extends React.Component {
+    // AddOption component manages error state.  Initialized to undefined.
     state = {
       error: undefined
     };
 
     handleAddOption = (event) => {
       event.preventDefault();
-        // console.log(applesauce);
+      // get the trimmed text from the input
       const option = event.target.elements.option.value.trim();
+      // handleAddOption is an event handler passed as props by UncertaintyApp
       const error =  this.props.handleAddOption(option);
       
       this.setState( () => ({ error: error}) )
